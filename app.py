@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for, session
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from wallet_func.wallet import wallet_bp
@@ -9,7 +9,7 @@ db = client['roticanai']
 collection = db['roticanai']
 
 app = Flask(__name__)
-app.secret_key = '3ff05908-6127-4fd5-a4b5-27153ae7cf72'
+app.secret_key = '3ff05908-6127-4fd5-a4b5-27153ae7cf72'  # Set your secret key for sessions
 
 app.register_blueprint(wallet_bp)
 
@@ -26,8 +26,11 @@ def login_create():
         user = collection.find_one({"email": email, "pass": password})
         
         if user:
-            # Pass user information as query parameters
-            return redirect(url_for('main_page', username=user['userId'], email=user['email']))
+            # Store user information in session
+            session['userId'] = user['userId']
+            session['walletAddr'] = user['walletAddr']
+            session['email'] = user['email']
+            return redirect(url_for('main_page'))
         else:
             flash("Invalid credentials, please try again.")
             return redirect(url_for('login_create'))
@@ -36,14 +39,17 @@ def login_create():
 
 @app.route('/main_page')
 def main_page():
-    # Get username and email from query parameters
-    username = request.args.get('username', 'Guest')
-    email = request.args.get('email', 'Not Provided')
-    return render_template('main_page.html', username=username, email=email)
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('main_page.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/sign_out')
 def sign_out():
-    return render_template('sign_out.html')
+    # Clear session
+    session.clear()
+    return redirect(url_for('login_create'))
 
 if __name__ == '__main__':
     app.run(debug=True)
