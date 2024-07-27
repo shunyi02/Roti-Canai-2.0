@@ -26,22 +26,24 @@ def login_create():
         user = collection.find_one({"email": email, "pass": password})
         
         if user:
-            return redirect(url_for('main_page'))
+            # Pass user information as query parameters
+            return redirect(url_for('main_page', username=user['userId'], email=user['email']))
         else:
             flash("Invalid credentials, please try again.")
             return redirect(url_for('login_create'))
 
     return render_template('login_create.html')
 
-
 @app.route('/main_page')
 def main_page():
-    return render_template('main_page.html')
+    # Get username and email from query parameters
+    username = request.args.get('username', 'Guest')
+    email = request.args.get('email', 'Not Provided')
+    return render_template('main_page.html', username=username, email=email)
 
 @app.route('/sign_out')
 def sign_out():
     return render_template('sign_out.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
