@@ -1,26 +1,45 @@
-from flask import Flask, render_template
+from flask import Flask, flash, redirect, render_template, request, url_for
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from wallet_func.wallet import wallet_bp
 
 uri = "mongodb+srv://admin:admin@cluster0.tu1qoxk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-# Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
-# Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
+db = client['roticanai']
+collection = db['roticanai']
 
 app = Flask(__name__)
+app.secret_key = '3ff05908-6127-4fd5-a4b5-27153ae7cf72'
 
-@app.route('/') 
-def main_page():
+app.register_blueprint(wallet_bp)
+
+@app.route('/', methods=['GET', 'POST'])
+def login_create():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if not email or not password:
+            flash("Email and password are required.")
+            return redirect(url_for('login_create'))
+
+        user = collection.find_one({"email": email, "pass": password})
+        
+        if user:
+            # Pass user information as query parameters
+            return redirect(url_for('main_page', username=user['userId'], email=user['email']))
+        else:
+            flash("Invalid credentials, please try again.")
+            return redirect(url_for('login_create'))
+
     return render_template('login_create.html')
 
 @app.route('/main_page')
-def login_create():
-    return render_template('main_page.html')
+def main_page():
+    # Get username and email from query parameters
+    username = request.args.get('username', 'Guest')
+    email = request.args.get('email', 'Not Provided')
+    return render_template('main_page.html', username=username, email=email)
 
 @app.route('/sign_out')
 def sign_out():
