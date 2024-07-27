@@ -30,20 +30,28 @@ def login_create():
             session['userId'] = user['userId']
             session['walletAddr'] = user['walletAddr']
             session['email'] = user['email']
-            return redirect(url_for('main_page'))
+            return redirect(url_for('wallet'))
         else:
             flash("Invalid credentials, please try again.")
             return redirect(url_for('login_create'))
 
     return render_template('login_create.html')
 
-@app.route('/main_page')
-def main_page():
+@app.route('/index')
+def index():
     # Get user information from session
     username = session.get('userId', 'Guest')
     email = session.get('email', 'Not Provided')
     walletAddr = session.get('walletAddr', 'Not Provided')
-    return render_template('main_page.html', username=username, email=email, walletAddr=walletAddr)
+    return render_template('index.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/wallet')
+def wallet():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('wallet.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/sign_out')
 def sign_out():

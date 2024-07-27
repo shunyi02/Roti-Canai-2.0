@@ -267,3 +267,97 @@ def remove_tokens():
     }
     burn_response = requests.post(burn_api_url, headers=headers, json=burn_data)
     return jsonify(burn_response.json()), burn_response.status_code
+
+@wallet_bp.route('/api/org_create_cert', methods=['POST'])
+def org_create_cert():
+    # Extract data from the form
+    wallet_address = request.form.get('wallet_address')
+    name = request.form.get('name')
+    wallet_address_owner = request.form.get('wallet_address_owner')
+    max_supply = request.form.get('max_supply')
+    certificate_name = request.form.get('certificate_name')
+    symbol = request.form.get('symbol')
+    callback_url = request.form.get('callback_url')
+    image = request.form.get('image')
+    
+    # Validate required fields
+    if not wallet_address or not name or not wallet_address_owner or not max_supply or not certificate_name or not symbol:
+        return jsonify({"message": "All required fields must be provided"}), 400
+
+    # Prepare the field object
+    field = {
+        "wallet_address_owner": wallet_address_owner,
+        "max_supply": max_supply,
+        "name": certificate_name,
+        "symbol": symbol
+    }
+
+    # Prepare the data payload for the API request
+    data = {
+        "wallet_address": wallet_address,
+        "name": name,
+        "field": field
+    }
+    
+    if image:
+        data["image"] = image
+    if callback_url:
+        data["callback_url"] = callback_url
+
+    # Set up the headers
+    headers = {
+        "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
+        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
+        "content-type": "application/json"
+    }
+
+    # Make the API request to create the smart contract
+    response = requests.post(f"https://service-testnet.maschain.com/certificate/create-smartcontract", json=data, headers=headers)
+    
+    # Return the API response
+    return jsonify(response.json()), response.status_code
+
+
+@wallet_bp.route('/api/pass_cert', methods=['POST'])
+def pass_cert():
+    # Extract data from the form
+    wallet_address = request.form.get('wallet_address')
+    to = request.form.get('to')
+    contract_address = request.form.get('contract_address')
+    name = request.form.get('name')
+    description = request.form.get('description')
+    callback_url = request.form.get('callback_url')
+    file = request.files.get('file')  # File upload
+    
+    # Validate required fields
+    if not wallet_address or not to or not contract_address or not name or not description or not callback_url or not file:
+        return jsonify({"message": "All required fields must be provided"}), 400
+
+    
+    # Prepare the payload for the API request
+    data = {
+        "wallet_address": wallet_address,
+        "to": to,
+        "contract_address": contract_address,
+        "name": name,
+        "description": description,
+        "callback_url": "https://postman-echo.com/post?",
+    }
+
+    # Create a multipart/form-data payload
+    files = {
+        "file": (file.filename, file, file.mimetype)
+    }
+
+    # Set up the headers
+    headers = {
+        "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
+        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
+        "content-type": "multipart/form-data"  # This will be handled automatically by requests
+    }
+
+    # Make the API request to mint the certificate
+    response = requests.post(f"https://service-testnet.maschain.com/api/certificate/mint-certificate", data=data, files=files, headers=headers)
+    
+    # Return the API response
+    return jsonify(response.json()), response.status_code

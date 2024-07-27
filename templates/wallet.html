@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Wallet{% endblock %}
+
+{% block content %}
+<div class="main-panel">
+    <div class="main-header">
+      <div class="main-header-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+          <a href="index.html" class="logo">
+            <img
+              src="static/img/kaiadmin/logo_light.svg"
+              alt="navbar brand"
+              class="navbar-brand"
+              height="20"
+            />
+          </a>
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+              <i class="gg-menu-left"></i>
+            </button>
+          </div>
+          <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt"></i>
+          </button>
+        </div>
+        <!-- End Logo Header -->
+      </div>
+      <!-- Navbar Header -->
+      <nav
+        class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+      >
+        <div class="container-fluid">
+          <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+            <li class="nav-item topbar-user dropdown hidden-caret">
+                <span class="profile-username">
+                  <span class="op-7">Hi,</span>
+                  <span class="fw-bold">{{username}}</span>
+                </span>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+    </div>
+
+    <div class="container">
+      <div class="page-inner">
+        <div
+          class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+        >
+          <div>
+            <h3 class="fw-bold mb-3">Wallet Page</h3>
+            <h6 class="op-7 mb-2">Hi {{username}}, Welcome to wallet page. Let's charity together. </h6>
+          </div>
+          <div class="ms-md-auto py-2 py-md-0">
+            <a href="#" class="btn btn-label-info btn-round me-2">Charity Purchase</a>
+            <a href="#" class="btn btn-primary btn-round">Top Up</a>
+          </div>
+        </div>
+        <br><br>
+        <div class="row">
+          
+          <div class="col-md-6">
+            <div class="card card-default card-round">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <div class="card-title">Fund</div>
+                    </div>
+                </div>
+                <div class="card-body pb-0" style="min-height: 300px">
+                    <div class="mb-4 mt-2">
+                        <br><br>
+                        <!-- Display user balance -->
+                        <h1 id="balance">Loading...</h1>
+                        <br><br><br><br><br>
+                        <a href="#" class="btn btn-secondary btn-round" onclick="topUp()">
+                            Top Up
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+          <div class="col-md-6">
+            <div class="card card-info card-round">
+              <div class="card-header">
+                <div class="card-head-row">
+                  <div class="card-title">Care Point</div>
+                </div>
+              </div>
+              <div class="card-body pb-0" style="min-height: 300px">
+                <div class="mb-4 mt-2">
+                  <br><br>
+                  <h1 id="tokenBalance">Loading...</h1>
+                  <br><br><br><br><br>
+                  <a href="#" class="btn btn-primary btn-round">
+                    Purchase
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      // Fetch balance from the Flask API
+      fetchBalance();
+  });
+
+  function fetchBalance() {
+      // Example userId, replace with actual value or obtain dynamically
+      const userId = "{{username}}";  
+
+      fetch('/api/check-balance', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId: userId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.balance_from_api !== undefined) {
+              document.getElementById('balance').innerText = `RM ${data.balance_in_db.toFixed(2)}`;
+              document.getElementById('tokenBalance').innerText = `${data.balance_from_api.toFixed(2)} CP`;
+          } else {
+              document.getElementById('balance').innerText = "Error fetching balance";
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('balance').innerText = "Error fetching balance";
+      });
+  }
+
+  function topUp() {
+      // Implement top up functionality here
+      alert('Top Up functionality not yet implemented.');
+  }
+  </script>
+{% endblock %}
