@@ -14,15 +14,8 @@ except Exception as e:
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/') 
 def main_page():
-<<<<<<< Updated upstream
-    return render_template('main_page.html')
-
-@app.route('/login_create') 
-def login_create():
-=======
->>>>>>> Stashed changes
     return render_template('login_create.html')
 
 @app.route('/main_page')
