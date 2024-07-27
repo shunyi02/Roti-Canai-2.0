@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link rel="stylesheet" href="css/main_page.css" />
+    <link rel="stylesheet" href="/static/css/main_page.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMTDc4IEnyZr53bXjyAvx8jX0NybvIURYY6Jv4d" crossorigin="anonymous">
-    <script src="scripts.js" defer></script>
+    <script src="/static/js/scripts.js" defer></script>
 </head>
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="user-info">
                 <div class="user-avatar">
-                    <img src="img/avatar.png" alt="User Avatar">
+                    <img src="/static/img/avatar.png" alt="User Avatar">
                 </div>
                 <div class="user-details">
                     <h3>Username</h3>
@@ -25,14 +25,14 @@
             <ul>
                 <li class="nav-item">
                     <a href="#">
-                        <img src="img/home2.webp" alt="home icon" class="nav-icon">
+                        <img src="/static/img/home2.webp" alt="home icon" class="nav-icon">
                         <span>Home</span>
                         <i class="fas fa-chevron-right arrow-icon"></i>
                     </a>
                 </li>
                 <li class="dropdown nav-item">
                     <a href="#" onclick="toggleDropdown(event)">
-                        <img src="img/Messaging-Inbox-icon.png" alt="Inbox" class="nav-icon">
+                        <img src="/static/img/Messaging-Inbox-icon.png" alt="Inbox" class="nav-icon">
                         <span>Fund Management</span>
                         <i class="fas fa-chevron-down arrow-icon"></i>
                     </a>
@@ -71,7 +71,7 @@
                 </li>
                 <li class="dropdown nav-item">
                     <a href="#" onclick="toggleDropdown(event)">
-                        <img src="img/Messaging-Inbox-icon.png" alt="Inbox" class="nav-icon">
+                        <img src="/static/img/Messaging-Inbox-icon.png" alt="Inbox" class="nav-icon">
                         <span>Token Management</span>
                         <i class="fas fa-chevron-down arrow-icon"></i>
                     </a>
@@ -85,7 +85,7 @@
                 </li>
                 <li class="dropdown nav-item">
                     <a href="#" onclick="toggleDropdown(event)">
-                        <img src="img/Messaging-Inbox-icon.png" alt="Inbox" class="nav-icon">
+                        <img src="/static/img/Messaging-Inbox-icon.png" alt="Inbox" class="nav-icon">
                         <span>Certificate</span>
                         <i class="fas fa-chevron-down arrow-icon"></i>
                     </a>
@@ -100,7 +100,7 @@
             </ul>
         </nav>
         <div class="sidebar-footer">
-            <p><a href="sign_out.html">Sign Out></a></p>
+            <p><a href="/templates/sign_out.html">Sign Out></a></p>
         </div>
     </div>
     <div class="content">
