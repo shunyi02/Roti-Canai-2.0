@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from wallet_func.wallet import wallet_bp
 
 uri = "mongodb+srv://admin:admin@cluster0.tu1qoxk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 # Create a new client and connect to the server
@@ -14,6 +15,8 @@ except Exception as e:
 
 app = Flask(__name__)
 
+app.register_blueprint(wallet_bp)
+
 @app.route('/')
 def main_page():
     return render_template('main_page.html')
@@ -25,6 +28,7 @@ def login_create():
 @app.route('/sign_out')
 def sign_out():
     return render_template('sign_out.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
