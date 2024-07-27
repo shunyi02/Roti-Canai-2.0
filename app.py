@@ -16,11 +16,18 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
+<<<<<<< Updated upstream
     return render_template('main_page.html')
 
 @app.route('/login_create') 
 def login_create():
+=======
+>>>>>>> Stashed changes
     return render_template('login_create.html')
+
+@app.route('/main_page')
+def login_create():
+    return render_template('main_page.html')
 
 @app.route('/sign_out')
 def sign_out():
