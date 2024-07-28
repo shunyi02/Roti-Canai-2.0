@@ -38,39 +38,48 @@ def login_create():
             flash("Email and password are required.")
             return redirect(url_for('login_create'))
 
+        # Fetch user from the database
         user = collection.find_one({"email": email, "pass": password})
         
         if user:
-            if email == 'admin1@gmail.com' and password == '123':
-                # Redirect to admin dashboard for specific credentials
-                return redirect(url_for('admin_dashboard'))
-            else:
-                # Store user information in session and redirect to wallet
-                if not user.get('walletId'):
-                    wallet_response = create_wallet(user['userId'], user['email'])
-                    
-                    if wallet_response.get('status') == 200:
-                        wallet_result = wallet_response.get('result')
-                        wallet_data = wallet_result.get('wallet')
-                        collection.update_one(
-                            {"userId": user['userId']},
-                            {"$set": {
-                                "walletId": wallet_data['wallet_id'],
-                                "walletAddr": wallet_data['wallet_address'],
-                                "balance": 3000
-                            }}
-                        )
-                        session['walletAddr'] = wallet_data['wallet_address']  # Update session with new wallet address
-                    else:
-                        flash("Failed to create wallet. Please try again.")
-                        return redirect(url_for('login_create'))
+            # Handle wallet creation and update if necessary
+            if not user.get('walletId'):
+                wallet_response = create_wallet(user['userId'], user['email'])
+                
+                if wallet_response.get('status') == 200:
+                    wallet_result = wallet_response.get('result')
+                    wallet_data = wallet_result.get('wallet')
+                    collection.update_one(
+                        {"userId": user['userId']},
+                        {"$set": {
+                            "walletId": wallet_data['wallet_id'],
+                            "walletAddr": wallet_data['wallet_address'],
+                            "balance": 3000
+                        }}
+                    )
+                    session['walletAddr'] = wallet_data['wallet_address']  # Update session with new wallet address
+                else:
+                    flash("Failed to create wallet. Please try again.")
+                    return redirect(url_for('login_create'))
 
+            # Store user information in session
+            session['userId'] = user['userId']
+            session['email'] = user['email']
+            session['walletAddr'] = user.get('walletAddr', '')
+
+            # Redirect based on email pattern
+            if email.startswith('admin'):
+                return redirect(url_for('admin_wallet'))
+            elif email.startswith('user'):
                 return redirect(url_for('wallet'))
+            else:
+                return redirect(url_for('index'))
         else:
             flash("Invalid credentials, please try again.")
             return redirect(url_for('login_create'))
 
     return render_template('login_create.html')
+
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
@@ -91,6 +100,14 @@ def wallet():
     email = session.get('email', 'Not Provided')
     walletAddr = session.get('walletAddr', 'Not Provided')
     return render_template('wallet.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/adminwallet')
+def admin_wallet():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('admin_wallet.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/org_cert')
 def org_cert():
@@ -134,7 +151,7 @@ def redemption():
 
 @app.route('/sign_out')
 def sign_out():
-    # Clear session
+    app.logger.info("Signing out user")
     session.clear()
     return redirect(url_for('login_create'))
 
