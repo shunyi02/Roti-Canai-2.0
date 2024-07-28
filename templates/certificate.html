@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Certificate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="static/css/certificate.css" /> <!-- Add this line -->
+
+<div class="main-content">
+    <div class="container">
+        <h1>Certificate Table View</h1>
+        <table id="certificateTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Maschain</td>
+                    <td>MEI</td>
+                    <td>
+                        <a href="" class="btn btn-primary">View Certificate</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>ExampleCorp</td>
+                    <td>EXC</td>
+                    <td>
+                        <a href="" class="btn btn-primary">View Certificate</a>
+                    </td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#certificateTable').DataTable();
+    });
+</script>
+{% endblock %}

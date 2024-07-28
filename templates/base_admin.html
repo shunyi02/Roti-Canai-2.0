@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{% block title %}CareChain{% endblock %}</title>
+    <title>{% block title %}AdminCareChain{% endblock %}</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="static/img/kaiadmin/favicon.ico" type="image/x-icon" />
 
@@ -35,7 +35,7 @@
     <div class="wrapper">
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="dark">
-            <div class="sidebar-logo">  
+            <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="dark">
                     <a href="index.html" class="logo">
                         <img src="/static/img/logo only.png" alt="navbar brand" class="navbar-brand" height="80px" />
@@ -92,7 +92,7 @@
                       </li>
 
                       <li class="nav-item ">
-                        <a
+                        <aa
                           href="/wallet"
                           class="collapsed"
                           aria-expanded="false"
@@ -113,12 +113,28 @@
                           <ul class="nav nav-collapse">
                             <li>
                               <a href="#">
-                                <span class="sub-item"> Make Donation</span>
+                                <span class="sub-item">Check Account Balance</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li class="nav-item">
+                        <a data-bs-toggle="collapse" href="#carepoints">
+                          <i class="fas fa-hand-holding-heart"></i>
+                          <p>Care Points</p>
+                          <span class="caret"></span>
+                        </a>
+                        <div class="collapse" id="carepoints">
+                          <ul class="nav nav-collapse">
+                            <li>
+                              <a href="#">
+                                <span class="sub-item">Allocate Care Points</span>
                               </a>
                             </li>
                             <li>
                               <a href="#">
-                                <span class="sub-item">View Donation History</span>
+                                <span class="sub-item">View Care Points Transactions</span>
                               </a>
                             </li>
                           </ul>
@@ -132,26 +148,30 @@
                         </a>
                         <div class="collapse" id="certificate">
                           <ul class="nav nav-collapse">
-
                             <li>
-                              <a href="#">
-                                <span class="sub-item">View Certificate</span>
+                              <a href="org_cert">
+                                <span class="sub-item">Create Certificates</span>
                               </a>
                             </li>
+                            <li>
+                                <a href="org_pass_cert">
+                                  <span class="sub-item">Assign Certificates</span>
+                                </a>
+                              </li>
                           </ul>
                         </div>
                       </li>
                       <li class="nav-item">
                         <a data-bs-toggle="collapse" href="#volunteers">
                           <i class="fas fa-users"></i>
-                          <p>Volunteering</p>
+                          <p>Volunteers</p>
                           <span class="caret"></span>
                         </a>
                         <div class="collapse" id="volunteers">
                           <ul class="nav nav-collapse">
                             <li>
                               <a href="#">
-                                <span class="sub-item"> View Volunteering Programmes</span>
+                                <span class="sub-item">Create Volunteering Programme</span>
                               </a>
                             </li>
                           </ul>

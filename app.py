@@ -26,16 +26,24 @@ def login_create():
         user = collection.find_one({"email": email, "pass": password})
         
         if user:
-            # Store user information in session
-            session['userId'] = user['userId']
-            session['walletAddr'] = user['walletAddr']
-            session['email'] = user['email']
-            return redirect(url_for('wallet'))
+            if email == 'admin1@gmail.com' and password == '123':
+                # Redirect to admin dashboard for specific credentials
+                return redirect(url_for('admin_dashboard'))
+            else:
+                # Store user information in session and redirect to wallet
+                session['userId'] = user['userId']
+                session['walletAddr'] = user['walletAddr']
+                session['email'] = user['email']
+                return redirect(url_for('wallet'))
         else:
             flash("Invalid credentials, please try again.")
             return redirect(url_for('login_create'))
 
     return render_template('login_create.html')
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    return render_template('admin_dashboard.html')
 
 @app.route('/index')
 def index():
@@ -99,6 +107,13 @@ def my_profile():
 def testing():
     return render_template('animatedlogin.html')
 
+@app.route('/certificate')
+def certificate():
+    return render_template('certificate.html')
+
+@app.route('/volunteer')
+def admin_volunteer():
+    return render_template('admin_volunteer.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

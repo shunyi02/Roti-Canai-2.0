@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Volunteering Programs{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="/static/css/calendar.css">
+    <div class="container">
+        <h1>Volunteering Programs</h1>
+        <div class="form-container">
+            <h2>Create Volunteering Program</h2>
+            <form id="programForm">
+                <label for="programName">Program Name:</label>
+                <input type="text" id="programName" name="programName" required>
+                
+                <label for="organizerName">Organizer Name:</label>
+                <input type="text" id="organizerName" name="organizerName" required>
+                
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+                
+                <label for="time">Time:</label>
+                <input type="time" id="time" name="time" required>
+                
+                <label for="venue">Venue:</label>
+                <input type="text" id="venue" name="venue" required>
+                
+                <button type="submit" class="btn-primary">Add Program</button>
+            </form>
+        </div>
+        <div class="table-container">
+            <h2>Volunteer Programs</h2>
+            <table id="programTable">
+                <thead>
+                    <tr>
+                        <th>Program Name</th>
+                        <th>Organizer Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Venue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cleaning</td>
+                        <td>Shelter Home for Children</td>
+                        <td>1 August 2024</td>
+                        <td>8:00 AM</td>
+                        <td>2, Lorong Timur, Taman Jaya, 46000 Petaling Jaya, Selangor</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    <script src="script.js"></script>
+{% endblock %}
