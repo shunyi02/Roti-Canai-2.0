@@ -3,11 +3,11 @@
 {% block title %}Certificate{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="static/css/certificate.css" /> <!-- Add this line -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/certificate.css') }}" />
 
 <div class="main-content">
     <div class="container mt-5">
-        <h1>Welcome to View Certificate: </h1>
+        <h1>Welcome to View Certificate:</h1>
         <div id="certificate-table" class="mt-5">
             {% if certificates %}
             <div class="card">
@@ -16,13 +16,12 @@
                 </div>
                 <div class="card-body">
                     <div class="card-sub">
-                        User wallet ID: {{walletAddr}}
+                        User wallet ID: {{ walletAddr }}
                     </div>
                     <table class="table table-striped mt-3">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                
                                 <th scope="col">Certificate File</th>
                                 <th scope="col">Block Number</th>
                                 <th scope="col">Created At</th>
@@ -32,7 +31,13 @@
                             {% for certificate in certificates %}
                             <tr>
                                 <td>{{ loop.index }}</td>
-                                <td>{{ certificate.certificate_file }}</td>
+                                <td>
+                                    <a href="{{ certificate.certificate_image_file }}" 
+                                       class="btn btn-primary" 
+                                       target="_blank">
+                                       View Certificate
+                                    </a>
+                                </td>
                                 <td>{{ certificate.blockNumber }}</td>
                                 <td>{{ certificate.created_at }}</td>
                             </tr>
@@ -49,6 +54,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}
