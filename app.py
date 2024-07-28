@@ -91,5 +91,14 @@ def sign_out():
     session.clear()
     return redirect(url_for('login_create'))
 
+@app.route('/my_profile')
+def my_profile():
+    return render_template('myprofile.html')
+
+@app.route('/testing')
+def testing():
+    return render_template('animatedlogin.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
