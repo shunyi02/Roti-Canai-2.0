@@ -37,10 +37,10 @@
         <div class="sidebar" data-background-color="dark">
             <div class="sidebar-logo">
                 <div class="logo-header" data-background-color="dark">
-                    <a href="index.html" class="logo">
+                    <a href="/adminwallet" class="logo">
                         <img src="/static/img/logo only.png" alt="navbar brand" class="navbar-brand" height="80px" />
                     </a>
-                    <a href="index.html" class="logo">
+                    <a href="/adminwallet" class="logo">
                       <img src="/static/img/word only.png" alt="navbar brand" class="navbar-brand" height="20px" />
                   </a>
                     <div class="nav-toggle">
@@ -60,30 +60,6 @@
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
 
-                      <li class="nav-item active">
-                        <a
-                          data-bs-toggle="collapse"
-                          href="#dashboard"
-                          class="collapsed"
-                          aria-expanded="false"
-                        >
-                          <i class="fas fa-home"></i>
-                          <p>Dashboard</p>
-                          <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="dashboard">
-                          <ul class="nav nav-collapse">
-                            <li>
-                              <a href="../demo1/index.html">
-                                <span class="sub-item">Dashboard 1</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </li>
-
-                      
-
                       <li class="nav-section">
                         <span class="sidebar-mini-icon">
                           <i class="fa fa-ellipsis-h"></i>
@@ -92,8 +68,8 @@
                       </li>
 
                       <li class="nav-item ">
-                        <aa
-                          href="/wallet"
+                        <a
+                          href="/adminwallet"
                           class="collapsed"
                           aria-expanded="false"
                         >
@@ -101,44 +77,6 @@
                           <p>Wallet</p>
                           
                         </a>
-                      </li>
-
-                      <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#donation">
-                          <i class="fas fa-hand-holding-usd"></i>
-                          <p>Donation</p>
-                          <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="donation">
-                          <ul class="nav nav-collapse">
-                            <li>
-                              <a href="#">
-                                <span class="sub-item">Check Account Balance</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </li>
-                      <li class="nav-item">
-                        <a data-bs-toggle="collapse" href="#carepoints">
-                          <i class="fas fa-hand-holding-heart"></i>
-                          <p>Care Points</p>
-                          <span class="caret"></span>
-                        </a>
-                        <div class="collapse" id="carepoints">
-                          <ul class="nav nav-collapse">
-                            <li>
-                              <a href="#">
-                                <span class="sub-item">Allocate Care Points</span>
-                              </a>
-                            </li>
-                            <li>
-                              <a href="#">
-                                <span class="sub-item">View Care Points Transactions</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
                       </li>
                       <li class="nav-item">
                         <a data-bs-toggle="collapse" href="#certificate">
@@ -149,12 +87,12 @@
                         <div class="collapse" id="certificate">
                           <ul class="nav nav-collapse">
                             <li>
-                              <a href="org_cert">
+                              <a href="/org_cert">
                                 <span class="sub-item">Create Certificates</span>
                               </a>
                             </li>
                             <li>
-                                <a href="org_pass_cert">
+                                <a href="/org_pass_cert">
                                   <span class="sub-item">Assign Certificates</span>
                                 </a>
                               </li>
@@ -170,12 +108,20 @@
                         <div class="collapse" id="volunteers">
                           <ul class="nav nav-collapse">
                             <li>
-                              <a href="#">
+                              <a href="/volunteer">
                                 <span class="sub-item">Create Volunteering Programme</span>
                               </a>
                             </li>
                           </ul>
                         </div>
+                    </li>
+
+                     <!-- Sign Out Button -->
+                     <li class="nav-item" style="position: absolute; bottom:auto; width: 100%;">
+                      <a href="{{ url_for('sign_out') }}" id="signout-btn" class="collapsed">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <p>Sign Out</p>
+                    </a>
                     </li>
 
                     </ul>
@@ -222,5 +168,27 @@
 
     <!-- Kaiadmin JS -->
     <script src="static/js/kaiadmin.min.js"></script>
+
+    <script>
+      document.getElementById('signout-btn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default anchor behavior
+        
+        // Perform sign out
+        fetch('{{ url_for('sign_out') }}', {
+          method: 'GET',
+          credentials: 'include' // Include cookies for session management
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/'; // Redirect to the home page
+          } else {
+            alert('Sign out failed. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error during sign out:', error);
+        });
+      });
+    </script>
 </body>
 </html>
