@@ -116,6 +116,14 @@ def main():
     walletAddr = session.get('walletAddr', 'Not Provided')
     return render_template('main.html', username=username, email=email, walletAddr=walletAddr)
 
+@app.route('/donation')
+def donation():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('donation.html', username=username, email=email, walletAddr=walletAddr)
+
 @app.route('/redemption')
 def redemption():
     # Get user information from session
