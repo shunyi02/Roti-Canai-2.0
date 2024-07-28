@@ -117,7 +117,7 @@
           const apiEndpoint = paymentMethod === 'fund' ? '/api/remove-funds' : '/api/remove-tokens';
     
           // Assuming userId is available in some global context or retrieved from the server/session
-          const userId = {{username}};
+          const userId = "{{username}}";
     
           // Check balance first
           fetch('/api/check-balance', {
