@@ -43,6 +43,7 @@ def login_create():
         if user:
             if email == 'admin1@gmail.com' and password == '123':
                 # Redirect to admin dashboard for specific credentials
+                
                 return redirect(url_for('admin_dashboard'))
             else:
                 # Store user information in session and redirect to wallet
@@ -74,7 +75,10 @@ def login_create():
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    return render_template('admin_dashboard.html')
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('admin_dashboard.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/index')
 def index():
@@ -107,6 +111,14 @@ def org_pass_cert():
     email = session.get('email', 'Not Provided')
     walletAddr = session.get('walletAddr', 'Not Provided')
     return render_template('org_pass_cert.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/viewCert')
+def viewCert():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('viewCert.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/main')
 def main():

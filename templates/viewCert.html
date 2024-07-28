@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Certificate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="static/css/certificate.css" /> <!-- Add this line -->
+
+<div class="main-content">
+    <div class="container mt-5">
+        <h1>Welcome to View Certificate: </h1>
+        <div id="certificate-table" class="mt-5">
+            {% if certificates %}
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Certificate Details</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-sub">
+                        User wallet ID: {{walletAddr}}
+                    </div>
+                    <table class="table table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                
+                                <th scope="col">Certificate File</th>
+                                <th scope="col">Block Number</th>
+                                <th scope="col">Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for certificate in certificates %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ certificate.certificate_file }}</td>
+                                <td>{{ certificate.blockNumber }}</td>
+                                <td>{{ certificate.created_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                No certificate details found for the wallet address: {{ walletAddr }}.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

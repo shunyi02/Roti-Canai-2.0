@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify,session
+from flask import Blueprint, request, jsonify,session,render_template_string,render_template
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import requests
@@ -12,22 +12,101 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['roticanai']  # replace with your database name
 collection = db['roticanai']  # replace with your collection name
 
+
+def fetch_certificate_details(to_address):
+    headers = {
+        "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
+        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
+        "content-type": "application/json"
+    }
+    params = {
+        "to": to_address
+    }
+    response = requests.get("https://service-testnet.maschain.com/api/certificate/get-certificate", headers=headers, params=params)
+    print(response)
+    return response.json()
+
+@wallet_bp.route('/get-certificate-details', methods=['GET'])
+def get_certificate_details():
+    wallet_address = session.get('walletAddr')
+    certificates = []
+    if wallet_address:
+        data = fetch_certificate_details(wallet_address)
+        if data['status'] == 200:
+            certificates = data['result']
+    print(data["result"])
+    
+    return render_template('viewCert.html', certificates=certificates, walletAddr=wallet_address)
+
+    
+
+# HTML Template for rendering the table
+table_template = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Certificate Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Certificate Details</div>
+    </div>
+    <div class="card-body">
+        <div class="card-sub">
+            Add
+            <code class="highlighter-rouge">.table-striped</code> to
+            rows the striped table
+        </div>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Wallet ID</th>
+                    <th scope="col">Wallet Address</th>
+                    <th scope="col">Transaction ID</th>
+                    <th scope="col">Certificate File</th>
+                    <th scope="col">Block Number</th>
+                    <th scope="col">Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for certificate in certificates %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ certificate.wallet_id }}</td>
+                    <td>{{ certificate.wallet_address }}</td>
+                    <td>{{ certificate.transaction_id }}</td>
+                    <td>{{ certificate.certificate_file }}</td>
+                    <td>{{ certificate.blockNumber }}</td>
+                    <td>{{ certificate.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+"""
+
 #done check
-# Function to create a new wallet
-# @wallet_bp.route('/api/create_wallet', methods=['POST'])
-# def create_wallet(name, email):
-#     api_url = "https://service-testnet.maschain.com/api/wallet/create-user"
-#     headers = {
-#         "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
-#         "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
-#         "content-type": "application/json"
-#     }
-#     data = {
-#         "name": name,
-#         "email": email
-#     }
-#     response = requests.post(api_url, headers=headers, json=data)
-#     return response.json()
+#Function to create a new wallet
+@wallet_bp.route('/api/create_wallet', methods=['POST'])
+def create_wallet(name, email):
+    api_url = "https://service-testnet.maschain.com/api/wallet/create-user"
+    headers = {
+        "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
+        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
+        "content-type": "application/json"
+    }
+    data = {
+        "name": name,
+        "email": email
+    }
+    response = requests.post(api_url, headers=headers, json=data)
+    return response.json()
 
 #done check
 @wallet_bp.route('/api/check-wallet', methods=['POST'])
@@ -343,7 +422,7 @@ def org_create_cert():
 def pass_cert():
     # Extract data from the form
     wallet_address = "0x6E84d9eD84A98460F090E8A337507F1cC4000564"
-    to = "0xe8c785f47244704D45B76E70Da1DF6C78FA07440"
+    to = "0x23a4ea6FA58DcA487df5032De5C252492EAe3BF1" #request.form.get('to')
     contract_address = "0x131aE01B9cE60b41B053e370B9B42cB1Ea43ab0d"
     name = request.form.get('name')
     description = request.form.get('description')
