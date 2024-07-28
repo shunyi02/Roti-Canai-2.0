@@ -14,19 +14,20 @@ collection = db['roticanai']  # replace with your collection name
 
 #done check
 # Function to create a new wallet
-def create_wallet(name, email):
-    api_url = "https://service-testnet.maschain.com/api/wallet/create-user"
-    headers = {
-        "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
-        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
-        "content-type": "application/json"
-    }
-    data = {
-        "name": name,
-        "email": email
-    }
-    response = requests.post(api_url, headers=headers, json=data)
-    return response.json()
+# @wallet_bp.route('/api/create_wallet', methods=['POST'])
+# def create_wallet(name, email):
+#     api_url = "https://service-testnet.maschain.com/api/wallet/create-user"
+#     headers = {
+#         "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
+#         "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
+#         "content-type": "application/json"
+#     }
+#     data = {
+#         "name": name,
+#         "email": email
+#     }
+#     response = requests.post(api_url, headers=headers, json=data)
+#     return response.json()
 
 #done check
 @wallet_bp.route('/api/check-wallet', methods=['POST'])

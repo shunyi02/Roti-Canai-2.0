@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, url_for, ses
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from wallet_func.wallet import wallet_bp
+import requests
 
 uri = "mongodb+srv://admin:admin@cluster0.tu1qoxk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -12,6 +13,20 @@ app = Flask(__name__)
 app.secret_key = '3ff05908-6127-4fd5-a4b5-27153ae7cf72'  # Set your secret key for sessions
 
 app.register_blueprint(wallet_bp)
+
+def create_wallet(name, email):
+    api_url = "https://service-testnet.maschain.com/api/wallet/create-user"
+    headers = {
+        "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
+        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
+        "content-type": "application/json"
+    }
+    data = {
+        "name": name,
+        "email": email
+    }
+    response = requests.post(api_url, headers=headers, json=data)
+    return response.json()
 
 @app.route('/', methods=['GET', 'POST'])
 def login_create():
@@ -31,9 +46,25 @@ def login_create():
                 return redirect(url_for('admin_dashboard'))
             else:
                 # Store user information in session and redirect to wallet
-                session['userId'] = user['userId']
-                session['walletAddr'] = user['walletAddr']
-                session['email'] = user['email']
+                if not user.get('walletId'):
+                    wallet_response = create_wallet(user['userId'], user['email'])
+                    
+                    if wallet_response.get('status') == 200:
+                        wallet_result = wallet_response.get('result')
+                        wallet_data = wallet_result.get('wallet')
+                        collection.update_one(
+                            {"userId": user['userId']},
+                            {"$set": {
+                                "walletId": wallet_data['wallet_id'],
+                                "walletAddr": wallet_data['wallet_address'],
+                                "balance": 3000
+                            }}
+                        )
+                        session['walletAddr'] = wallet_data['wallet_address']  # Update session with new wallet address
+                    else:
+                        flash("Failed to create wallet. Please try again.")
+                        return redirect(url_for('login_create'))
+
                 return redirect(url_for('wallet'))
         else:
             flash("Invalid credentials, please try again.")
