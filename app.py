@@ -43,7 +43,7 @@ def index():
     username = session.get('userId', 'Guest')
     email = session.get('email', 'Not Provided')
     walletAddr = session.get('walletAddr', 'Not Provided')
-    return render_template('index.html', username=username, email=email, walletAddr=walletAddr)
+    return render_template('main.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/wallet')
 def wallet():
