@@ -163,19 +163,16 @@ def remove_funds():
 @wallet_bp.route('/api/transfer-token-after-purchase', methods=['POST'])
 def mint_token_after_fund_purchase():
     user_id = request.json.get('userId')
-    amount_to_transfer = float(request.json.get('amount'))  # amount in cents or the smallest unit
+   
     wallet_address = "0x6E84d9eD84A98460F090E8A337507F1cC4000564"  # Fixed wallet address
     contract_address = "0x7b583DAfB2C3b57940d22053AEE07669325808DE" #need modify (find)
     callback_url = "https://postman-echo.com/post?"
 
+    amount_to_transfer = request.json.get('amount')
+    
     # Validate input
     if not user_id or not amount_to_transfer:
         return jsonify({"message": "User ID and amount to transfer are required"}), 400
-    
-    try:
-        amount_to_transfer = float(amount_to_transfer) / 10 # Adjust the amount as required
-    except ValueError:
-        return jsonify({"message": "Invalid amount format"}), 400
 
     # Find the user
     user = collection.find_one({"userId": user_id})
@@ -204,6 +201,7 @@ def mint_token_after_fund_purchase():
     }
 
     response = requests.post(api_url, headers=headers, json=data)
+    print(response.json())
     return jsonify(response.json()), response.status_code
 
 #done check
@@ -268,18 +266,22 @@ def remove_tokens():
     burn_response = requests.post(burn_api_url, headers=headers, json=burn_data)
     return jsonify(burn_response.json()), burn_response.status_code
 
+from flask import request, jsonify
+import requests
+
 @wallet_bp.route('/api/org_create_cert', methods=['POST'])
 def org_create_cert():
-    # Extract data from the form
-    wallet_address = request.form.get('wallet_address')
-    name = request.form.get('name')
-    wallet_address_owner = request.form.get('wallet_address_owner')
-    max_supply = request.form.get('max_supply')
-    certificate_name = request.form.get('certificate_name')
-    symbol = request.form.get('symbol')
-    callback_url = request.form.get('callback_url')
-    image = request.form.get('image')
-    
+    # Extract data from the request JSON
+    data = request.json
+    wallet_address = "0x6E84d9eD84A98460F090E8A337507F1cC4000564"
+    name = data.get('name')
+    wallet_address_owner = "0x6E84d9eD84A98460F090E8A337507F1cC4000564"
+    max_supply = data.get('max_supply')
+    certificate_name = data.get('certificate_name')
+    symbol = data.get('symbol')
+    image = data.get('image', "")
+    callback_url = data.get('callback_url', "")
+
     # Validate required fields
     if not wallet_address or not name or not wallet_address_owner or not max_supply or not certificate_name or not symbol:
         return jsonify({"message": "All required fields must be provided"}), 400
@@ -293,17 +295,14 @@ def org_create_cert():
     }
 
     # Prepare the data payload for the API request
-    data = {
+    payload = {
         "wallet_address": wallet_address,
         "name": name,
         "field": field
     }
     
-    if image:
-        data["image"] = image
-    if callback_url:
-        data["callback_url"] = callback_url
-
+    print("Payload Data: ", payload)
+    
     # Set up the headers
     headers = {
         "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
@@ -311,29 +310,36 @@ def org_create_cert():
         "content-type": "application/json"
     }
 
-    # Make the API request to create the smart contract
-    response = requests.post(f"https://service-testnet.maschain.com/certificate/create-smartcontract", json=data, headers=headers)
-    
-    # Return the API response
-    return jsonify(response.json()), response.status_code
+    try:
+        # Make the API request to create the smart contract
+        response = requests.post("https://service-testnet.maschain.com/api/certificate/create-smartcontract", json=payload, headers=headers)
+        response_data = response.json()
+        
+        print("API Response: ", response_data)
+        
+        # Return the API response
+        return jsonify(response_data)
+    except requests.RequestException as e:
+        print("Request Exception: ", e)
+        return jsonify({"message": "An error occurred while making the API request"}), 500
+
 
 
 @wallet_bp.route('/api/pass_cert', methods=['POST'])
 def pass_cert():
     # Extract data from the form
-    wallet_address = request.form.get('wallet_address')
-    to = request.form.get('to')
-    contract_address = request.form.get('contract_address')
+    wallet_address = "0x6E84d9eD84A98460F090E8A337507F1cC4000564"
+    to = "0xe8c785f47244704D45B76E70Da1DF6C78FA07440"
+    contract_address = "0x131aE01B9cE60b41B053e370B9B42cB1Ea43ab0d"
     name = request.form.get('name')
     description = request.form.get('description')
-    callback_url = request.form.get('callback_url')
+    callback_url = "https://postman-echo.com/post?"
     file = request.files.get('file')  # File upload
-    
+
     # Validate required fields
     if not wallet_address or not to or not contract_address or not name or not description or not callback_url or not file:
         return jsonify({"message": "All required fields must be provided"}), 400
 
-    
     # Prepare the payload for the API request
     data = {
         "wallet_address": wallet_address,
@@ -341,23 +347,34 @@ def pass_cert():
         "contract_address": contract_address,
         "name": name,
         "description": description,
-        "callback_url": "https://postman-echo.com/post?",
+        "callback_url": callback_url
     }
 
+    print(data)
     # Create a multipart/form-data payload
     files = {
         "file": (file.filename, file, file.mimetype)
     }
 
+    print(files)
+    
     # Set up the headers
     headers = {
         "client_id": "bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c",
-        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a",
-        "content-type": "multipart/form-data"  # This will be handled automatically by requests
+        "client_secret": "sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a"
     }
 
     # Make the API request to mint the certificate
-    response = requests.post(f"https://service-testnet.maschain.com/api/certificate/mint-certificate", data=data, files=files, headers=headers)
-    
+    response = requests.post(
+        "https://service-testnet.maschain.com/api/certificate/mint-certificate",
+        data=data,
+        files=files,
+        headers=headers
+    )
+    response_data = response.json()
+
+    # Print API response for debugging
+    print("API Response: ", response_data)
+
     # Return the API response
-    return jsonify(response.json()), response.status_code
+    return jsonify(response_data), response.status_code

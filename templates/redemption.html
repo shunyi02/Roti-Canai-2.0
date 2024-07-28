@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Wallet{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/main.css"/>
+
+<div class="main-panel">
+<div class="main showcase-page">
+  <section class="module-medium" id="demos">
+    <div class="container">
+      
+      <div class="card">
+        <h1>Redemption</h1>
+        <div class="product-container">
+          <div class="product-box">
+            <img src="static/img/shirt.jpg" alt="YONEX UNISEX ROUND NECK SHIRT 2790 PEACH BUD" class="product-image">
+            <div class="product-description">
+              <p><b>Product Name:</b> YONEX UNISEX ROUND NECK SHIRT 2790 PEACH BUD</p>
+              <p><b>Shop Name:</b> Vsmash</p>
+              <p><b>Price:</b> RM10</p>
+              <p><b>Points:</b> 100</p>
+            </div>
+            <select class="payment-option">
+              <option value="fund">Pay with Fund</option>
+              <option value="token">Pay with Token</option>
+            </select>
+            <button class="join-button redeem-button" data-product-id="1"><b>Redeem</b></button>
+          </div>
+          <div class="product-box">
+            <img src="static/img/kitkat.jpg" alt="Nestle Kitkat Dark 52%" class="product-image">
+            <div class="product-description">
+              <p><b>Product Name:</b> Nestle Kitkat Dark 52%</p>
+              <p><b>Shop Name:</b> AEON</p>
+              <p><b>Price:</b> RM10</p>
+              <p><b>Points:</b> 100</p>
+            </div>
+            <select class="payment-option">
+              <option value="fund">Pay with Fund</option>
+              <option value="token">Pay with Token</option>
+            </select>
+            <button class="join-button redeem-button" data-product-id="1"><b>Redeem</b></button>
+          </div>
+          <div class="product-box">
+            <img src="static/img/tumbler.jpg" alt="ZUS OG Cup 2.0" class="product-image">
+            <div class="product-description">
+              <p><b>Product Name:</b> ZUS OG Cup 2.0</p>
+              <p><b>Shop Name:</b> ZUS Coffee</p>
+              <p><b>Price:</b> RM10</p>
+              <p><b>Points:</b> 100</p>
+            </div>
+            <select class="payment-option">
+              <option value="fund">Pay with Fund</option>
+              <option value="token">Pay with Token</option>
+            </select>
+            <button class="join-button redeem-button" data-product-id="1"><b>Redeem</b></button>
+          </div>
+          <div class="product-box">
+            <img src="static/img/diffuser.jpg" alt="Black Reed Diffuser" class="product-image">
+            <div class="product-description">
+              <p><b>Product Name:</b> Black Reed Diffuser</p>
+              <p><b>Shop Name:</b> HOOGA</p>
+              <p><b>Price:</b> RM10</p>
+              <p><b>Points:</b> 100</p>
+            </div>
+            <select class="payment-option">
+              <option value="fund">Pay with Fund</option>
+              <option value="token">Pay with Token</option>
+            </select>
+            <button class="join-button redeem-button" data-product-id="1"><b>Redeem</b></button>
+          </div>
+          <div class="product-box">
+            <img src="static/img/dog_bottle.jpg" alt="Travel Bottle With Filter" class="product-image">
+            <div class="product-description">
+              <p><b>Product Name:</b> Travel Bottle With Filter (Dog)</p>
+              <p><b>Shop Name:</b> Pet Lovers Centre</p>
+              <p><b>Price:</b> RM10</p>
+              <p><b>Points:</b> 100</p>
+            </div>
+            <select class="payment-option">
+              <option value="fund">Pay with Fund</option>
+              <option value="token">Pay with Token</option>
+            </select>
+            <button class="join-button redeem-button" data-product-id="1"><b>Redeem</b></button>
+          </div>
+          <div class="product-box">
+            <img src="static/img/coffee.jpg" alt="House Blend Light Roast Coffee" class="product-image">
+            <div class="product-description">
+              <p><b>Product Name:</b> House Blend Light Roast Coffee</p>
+              <p><b>Shop Name:</b> The Coffee Bean & Tea Leaf</p>
+              <p><b>Price:</b> RM10</p>
+              <p><b>Points:</b> 100</p>
+            </div>
+            <select class="payment-option">
+                <option value="fund">Pay with Fund</option>
+                <option value="token">Pay with Token</option>
+              </select>
+              <button class="join-button redeem-button" data-product-id="1"><b>Redeem</b></button>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+
+  </section>
+</div>
+    </div>
+
+    <script>
+      document.querySelectorAll('.redeem-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const productId = this.getAttribute('data-product-id');
+          const paymentMethod = this.previousElementSibling.value;
+          
+          const amountToDeduct = paymentMethod === 'fund' ? 10 : 100;
+          const apiEndpoint = paymentMethod === 'fund' ? '/api/remove-funds' : '/api/remove-tokens';
+    
+          // Assuming userId is available in some global context or retrieved from the server/session
+          const userId = "admin1";
+    
+          // Check balance first
+          fetch('/api/check-balance', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (paymentMethod === 'fund') {
+              if (data.balance_in_db < amountToDeduct) {
+                Swal.fire('Error', 'Insufficient funds', 'error');
+                return;
+              }
+            } else if (paymentMethod === 'token') {
+              if (data.balance_from_api < amountToDeduct) {
+                Swal.fire('Error', 'Insufficient tokens', 'error');
+                return;
+              }
+            }
+    
+            // Proceed to deduct funds or tokens
+            fetch(apiEndpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ userId, amount: amountToDeduct })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'Success') {
+                Swal.fire('Success', `Successfully redeemed using ${paymentMethod}`, 'success');
+              } else {
+                Swal.fire('Error', data.message || 'Failed to redeem', 'error');
+              }
+            })
+            .catch(error => {
+              Swal.fire('Error', 'An error occurred during redemption', 'error');
+            });
+          })
+          .catch(error => {
+            Swal.fire('Error', 'Failed to check balance', 'error');
+          });
+        });
+      });
+    </script>
+<!--   Core JS Files !!cannot throw  -->
+<script src="assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="assets/js/core/popper.min.js"></script>
+<script src="assets/js/core/bootstrap.min.js"></script>
+
+{% endblock %}

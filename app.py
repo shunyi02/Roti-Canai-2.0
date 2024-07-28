@@ -53,6 +53,38 @@ def wallet():
     walletAddr = session.get('walletAddr', 'Not Provided')
     return render_template('wallet.html', username=username, email=email, walletAddr=walletAddr)
 
+@app.route('/org_cert')
+def org_cert():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('org_cert.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/org_pass_cert')
+def org_pass_cert():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('org_pass_cert.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/main')
+def main():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('main.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/redemption')
+def redemption():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('redemption.html', username=username, email=email, walletAddr=walletAddr)
+
 @app.route('/sign_out')
 def sign_out():
     # Clear session

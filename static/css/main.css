@@ -1,0 +1,138 @@
+/* Main container for cards */
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Container for product boxes */
+  .product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  /* Individual product box */
+  /* .product-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.15);
+    width: calc(33.333% - 20px);  Three boxes in a row with a 20px gap
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: 0.35s ease-out;
+  } */
+
+  .product-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.15);
+    width: calc(33.333% - 20px);  /*Three boxes in a row with a 20px gap*/ 
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  /*Pushes the button to the bottom */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /*Smooth transition for transform and shadow */
+  } 
+  /* Hover effect */
+  .product-box:hover {
+  transform: translateY(-10px);  /*Move the box up by 10px */
+  box-shadow: 1px 4px 20px rgba(38, 80, 122, 0.25);  /*Enhance shadow on hover  */
+  }
+
+  /* Image within the product box */
+  .product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  
+  /* Description within the product box */
+  .product-description {
+    text-align: left;
+  }
+  
+  /* Heading within the description */
+  .product-description h5 {
+    margin: 0 0 10px;
+  }
+  
+  /* Paragraph within the description */
+  .product-description p {
+    margin: 0;
+    color: #666;
+  }
+  
+  /* Hyperlink within the description */
+  .product-description a {
+    color: #007bff; /* Blue color for the hyperlink */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .product-description a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 992px) {
+    .product-box {
+      width: calc(50% - 20px); /* Two boxes in a row with a 20px gap */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .product-box {
+      width: calc(100% - 20px); /* One box in a row */
+    }
+  }
+
+  /* .join-button {
+    width: 100px;
+    align-self: center;
+    background: #1572E8 !important;
+    border-color: #1572E8 !important; 
+    margin-top: auto;
+  } */
+  .join-button {
+    width: 100px;
+    height: 40px; /* Adjust height as needed */
+    border-radius: 20px; /* Make edges fully rounded */
+    align-self: center;
+    background: #1572E8 !important;
+    border-color: #1572E8 !important;
+    margin-top: auto;
+    display: flex;
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Center text horizontally */
+    color: #1a1a2e; /* Text color */
+    text-align: center; /* Ensure text is centered */
+    font-size: 14px; /* Adjust font size as needed */
+    font-weight: bold; /* Optional: make the text bold */
+    border: none; /* Remove default border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
+  }
+  
+  .join-button {
+    margin-top: 28px; /* Adjust as needed for spacing */
+  }
+    
+  .join-button:hover, .join-button:focus, .join-button:disabled {
+      color: #ffffff !important;
+      background: #1572E8 !important;
+      border-color: #1572E8 !important;
+  }
+  .join-button:hover {
+    transform: translateY(-5px); /* Move the button up by 5px */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.6); /* Enhance shadow on hover */
+  }

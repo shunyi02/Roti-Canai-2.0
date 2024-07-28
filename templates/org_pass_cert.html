@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Pass Certification{% endblock %}
+
+{% block content %}
+<div class="main-panel">
+    <div class="main-header">
+      <div class="main-header-logo">
+        <!-- Logo Header -->
+        <div class="logo-header" data-background-color="dark">
+          <a href="index.html" class="logo">
+            <img
+              src="static/img/kaiadmin/logo_light.svg"
+              alt="navbar brand"
+              class="navbar-brand"
+              height="20"
+            />
+          </a>
+          <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+              <i class="gg-menu-right"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+              <i class="gg-menu-left"></i>
+            </button>
+          </div>
+          <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt"></i>
+          </button>
+        </div>
+        <!-- End Logo Header -->
+      </div>
+      <!-- Navbar Header -->
+      <nav
+        class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+      >
+        <div class="container-fluid">
+          <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+            <li class="nav-item topbar-user dropdown hidden-caret">
+                <span class="profile-username">
+                  <span class="op-7">Hi,</span>
+                  <span class="fw-bold">{{username}}</span>
+                </span>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+    </div>
+
+    <div class="container">
+      <div class="page-inner">
+        <div class="page-header">
+          <h3 class="fw-bold mb-3">Forms</h3>
+          <ul class="breadcrumbs mb-3">
+            <li class="nav-home">
+              <a href="#">
+                <i class="icon-home"></i>
+              </a>
+            </li>
+            <li class="separator">
+              <i class="icon-arrow-right"></i>
+            </li>
+            <li class="nav-item">
+              <a href="org_cert">Certificate</a>
+            </li>
+            <li class="separator">
+              <i class="icon-arrow-right"></i>
+            </li>
+            <li class="nav-item">
+              <a href="org_cert">Assign Certificate</a>
+            </li>
+          </ul>
+
+        </div>
+
+
+          <form id="mintCertificateForm">
+            <div class="form-group">
+                <label for="walletAddress">Wallet Address:</label>
+                <input type="text" class="form-control" id="walletAddress" name="wallet_address" required>
+            </div>
+            <div class="form-group">
+                <label for="to">Receiver Address:</label>
+                <input type="text" class="form-control" id="to" name="to" required>
+            </div>
+            <div class="form-group">
+                <label for="contractAddress">Contract Address:</label>
+                <input type="text" class="form-control" id="contractAddress" name="contract_address" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Name of Certificate:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="file">File:</label>
+                <input type="file" class="form-control-file" id="file" name="file" required>
+            </div>
+            
+            <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+        </form>
+
+        
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.getElementById('submitButton').addEventListener('click', function() {
+      const form = document.getElementById('mintCertificateForm');
+      const formData = new FormData(form);
+
+      fetch('/api/pass_cert', {
+          method: 'POST',
+          headers: {
+              // Do not set 'Content-Type' here; let FormData handle it
+              'client_id': 'bdcd674b4307ae68fc8b115e4354fed29659deccc4a17b2c5d8ce37beb5e8a5c',
+              'client_secret': 'sk_0d1dcea6180c1376f5b1a7fa67e0d4acfdffd1c0f27a69a4a1f2012a74b0155a'
+          },
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.result.status === "pending") {
+              Swal.fire('Success', 'Certificate minted successfully!', 'success');
+          } else {
+              Swal.fire('Error', data.result.message || 'Failed to mint certificate', 'error');
+          }
+      })
+      .catch(error => {
+          Swal.fire('Error', 'An error occurred while minting the certificate', 'error');
+      });
+  });
+</script>
+
+
+{% endblock %}

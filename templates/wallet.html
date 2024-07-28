@@ -64,7 +64,6 @@
         </div>
         <br><br>
         <div class="row">
-          
           <div class="col-md-6">
             <div class="card card-default card-round">
                 <div class="card-header">
@@ -73,20 +72,21 @@
                     </div>
                 </div>
                 <div class="card-body pb-0" style="min-height: 300px">
-                    <div class="mb-4 mt-2">
-                        <br><br>
-                        <!-- Display user balance -->
-                        <h1 id="balance">Loading...</h1>
-                        <br><br><br><br><br>
-                        <a href="#" class="btn btn-secondary btn-round" onclick="topUp()">
-                            Top Up
-                        </a>
-                    </div>
-                </div>
+                  <div class="mb-4 mt-2">
+                      <br><br>
+                      <!-- Display user balance -->
+                      <h1 id="balance">Loading...</h1>
+                      <br><br><br><br><br>
+                      <button type="button" class="btn btn-secondary btn-round" id="topUpButton">
+                          Top Up
+                      </button>
+                  </div>
+              </div>
             </div>
-        </div>
-
+          </div>
+        
           <div class="col-md-6">
+            
             <div class="card card-info card-round">
               <div class="card-header">
                 <div class="card-head-row">
@@ -104,8 +104,106 @@
                 </div>
               </div>
             </div>
+            
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+              <a href="">
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div
+                      class="icon-big text-center icon-secondary bubble-shadow-small"
+                    >
+                      <i class="fas fa-money-check"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      
+                      <h4 class="card-category">Top Up for more charity</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+                <a href=""> <!--Add link here-->
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div
+                      class="icon-big text-center icon-secondary bubble-shadow-small"
+                    >
+                      <i class="fas fa-history"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      
+                      <h4 class="card-category">View your Fund History here</h4>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+              <a href=""> <!--Add link here-->
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div
+                      class="icon-big text-center icon-info bubble-shadow-small"
+                    >
+                      <i class="fas fa-star"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      
+                      <h4 class="card-category">Use your Care Point Here</h4>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+                <a href=""><!--Add link here-->
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div
+                      class="icon-big text-center icon-info bubble-shadow-small"
+                    >
+                      <i class="far fa-clock"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      
+                      <h4 class="card-category">View Your CarePoint History</h4>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+            </div>
           </div>
         </div>
+
+      </div>
 
       </div>
     </div>
@@ -116,9 +214,12 @@
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-      // Fetch balance from the Flask API
-      fetchBalance();
-  });
+    // Fetch balance from the Flask API
+    fetchBalance();
+
+    // Add event listener for Top Up button
+    document.getElementById('topUpButton').addEventListener('click', topUp);
+});
 
   function fetchBalance() {
       // Example userId, replace with actual value or obtain dynamically
@@ -147,8 +248,52 @@
   }
 
   function topUp() {
-      // Implement top up functionality here
-      alert('Top Up functionality not yet implemented.');
-  }
+    Swal.fire({
+        title: 'Input Top Up Amount',
+        input: 'text',
+        inputAttributes: {
+            'placeholder': 'Enter amount',
+            'type': 'number',
+            'class': 'form-control'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Top Up',
+        cancelButtonText: 'Cancel',
+        inputValidator: (value) => {
+            if (!value || isNaN(value) || parseFloat(value) <= 0) {
+                return 'Please enter a valid amount';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const amount = parseFloat(result.value);
+            const userId = "{{username}}"; // Use the actual user ID from your application context
+
+            fetch('/api/top-up', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId, amount: amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.new_balance !== undefined) {
+                    document.getElementById('balance').innerText = `RM ${data.new_balance.toFixed(2)}`;
+                    Swal.fire('Success', 'Top up successful!', 'success');
+                } else {
+                    Swal.fire('Error', data.message || 'Top up failed', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Top up failed', 'error');
+            });
+        }
+    });
+}
+
+  
+
   </script>
 {% endblock %}
