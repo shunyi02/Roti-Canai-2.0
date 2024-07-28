@@ -331,38 +331,51 @@
 </div>
 <script>
   document.querySelectorAll('.join-button').forEach(button => {
-    button.addEventListener('click', async function() {
-        const walletAddress = "{{ walletAddr }}"; // Use the actual wallet address from your template or context
-        const amountToTransfer = 10; // Tokens to add
-        const joinUrl = '/api/transfer-token-after-purchase'; // Endpoint for minting tokens
-        
-        try {
-            const response = await fetch(joinUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    userId: "{{ username }}", // Pass the userId
-                    amount: amountToTransfer
-                })
-            });
-            const data = await response.json();
+      button.addEventListener('click', async function() {
+        const { value: amountToDonate } = await Swal.fire({
+          title: 'Enter Donation Amount',
+          input: 'number',
+          inputLabel: 'Amount',
+          inputPlaceholder: 'Enter the amount you wish to donate',
+          inputAttributes: {
+              min: 1,
+              step: 0.01 // Allowing float input
+          },
+          showCancelButton: true
+        });
 
-            if (response.ok) {
-                if (data.result.status === 'pending') {
-                    Swal.fire('Success', 'Successfully joined and tokens added!', 'success');
-                } else {
-                    Swal.fire('Error', data.message || 'Failed to join', 'error');
-                }
-            } else {
-                Swal.fire('Error', 'Failed to join', 'error');
-            }
-        } catch (error) {
-            Swal.fire('Error', 'An error occurred while processing your request', 'error');
-        }
-    });
+          if (amountToDonate) {
+              const walletAddress = "{{ walletAddr }}"; // Use the actual wallet address from your template or context
+              const joinUrl = '/api/transfer-token-after-purchase'; // Endpoint for minting tokens
+
+              try {
+                  const response = await fetch(joinUrl, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Accept': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          userId: "{{ username }}", // Pass the userId
+                          amount: amountToDonate// Adjust as needed
+                      })
+                  });
+                  const data = await response.json();
+
+                  if (response.ok) {
+                      if (data.result.status === 'pending') {
+                          Swal.fire('Success', 'Successfully donated and tokens added!', 'success');
+                      } else {
+                          Swal.fire('Error', data.message || 'Failed to donate', 'error');
+                      }
+                  } else {
+                      Swal.fire('Error', 'Failed to donate', 'error');
+                  }
+              } catch (error) {
+                  Swal.fire('Error', 'An error occurred while processing your request', 'error');
+              }
+          }
+      });
   });
 </script>
     </div>

@@ -169,8 +169,8 @@ def mint_token_after_fund_purchase():
     contract_address = "0x7b583DAfB2C3b57940d22053AEE07669325808DE" #need modify (find)
     callback_url = "https://postman-echo.com/post?"
 
-    amount_to_transfer = request.json.get('amount')
-    
+    amount_to_transfer = float(request.json.get('amount'))
+    token_amount = amount_to_transfer/10
     # Validate input
     if not user_id or not amount_to_transfer:
         return jsonify({"message": "User ID and amount to transfer are required"}), 400
@@ -180,6 +180,19 @@ def mint_token_after_fund_purchase():
     
     if not user:
         return jsonify({"message": "User not found"}), 404
+    
+    current_balance = float(user.get('balance', 0))
+    
+    # Check if there are sufficient funds
+    if amount_to_transfer > current_balance:
+        return jsonify({"message": "Insufficient funds"}), 400
+    
+    # Update the balance
+    new_balance = current_balance - amount_to_transfer
+    collection.update_one(
+        {"userId": user_id},
+        {"$set": {"balance": new_balance}}
+    )
     
     wallet_addr = user.get('walletAddr')
     
@@ -196,7 +209,7 @@ def mint_token_after_fund_purchase():
     data = {
         "wallet_address": wallet_address,
         "to": wallet_addr,
-        "amount": float(amount_to_transfer),
+        "amount": float(token_amount),
         "contract_address": contract_address,
         "callback_url": callback_url
     }
