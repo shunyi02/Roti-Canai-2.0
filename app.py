@@ -2,6 +2,8 @@ from flask import Flask, flash, redirect, render_template, request, url_for, ses
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from wallet_func.wallet import wallet_bp
+from wallet_func.wallet import get_fund_transactions, get_token_transactions
+
 import requests
 
 uri = "mongodb+srv://admin:admin@cluster0.tu1qoxk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -102,7 +104,30 @@ def wallet():
     username = session.get('userId', 'Guest')
     email = session.get('email', 'Not Provided')
     walletAddr = session.get('walletAddr', 'Not Provided')
-    return render_template('wallet.html', username=username, email=email, walletAddr=walletAddr)
+    
+    # Get fund transactions
+    transactions = get_fund_transactions('transactions.txt', username)
+    cp_transactions = get_token_transactions('transactions.txt', username)
+    #print("transaction app.py: ",transactions)
+    
+    return render_template('wallet.html', username=username, email=email, walletAddr=walletAddr, transactions=transactions, cp_transactions=cp_transactions)
+
+
+@app.route('/leaderboard')
+def leaderboard():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('leaderboard.html', username=username, email=email, walletAddr=walletAddr)
+
+@app.route('/review')
+def review():
+    # Get user information from session
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('review_test.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/adminwallet')
 def admin_wallet():
@@ -168,7 +193,10 @@ def sign_out():
 
 @app.route('/my_profile')
 def my_profile():
-    return render_template('myprofile.html')
+    username = session.get('userId', 'Guest')
+    email = session.get('email', 'Not Provided')
+    walletAddr = session.get('walletAddr', 'Not Provided')
+    return render_template('myprofile.html', username=username, email=email, walletAddr=walletAddr)
 
 @app.route('/testing')
 def testing():

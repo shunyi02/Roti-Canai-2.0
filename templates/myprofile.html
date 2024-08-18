@@ -4,39 +4,187 @@
 
 {% block content %}
     <link rel="stylesheet" href="/static/css/myprofile.css">
+    <div class="main-panel">
+        <div class="main-header">
+            <div class="main-header-logo">
+              <!-- Logo Header -->
+              <div class="logo-header" data-background-color="dark">
+                <a href="index.html" class="logo">
+                  <img
+                    src="static/img/kaiadmin/logo_light.svg"
+                    alt="navbar brand"
+                    class="navbar-brand"
+                    height="20"
+                  />
+                </a>
+                <div class="nav-toggle">
+                  <button class="btn btn-toggle toggle-sidebar">
+                    <i class="gg-menu-right"></i>
+                  </button>
+                  <button class="btn btn-toggle sidenav-toggler">
+                    <i class="gg-menu-left"></i>
+                  </button>
+                </div>
+                <button class="topbar-toggler more">
+                  <i class="gg-more-vertical-alt"></i>
+                </button>
+              </div>
+              <!-- End Logo Header -->
+            </div>
+            <!-- Navbar Header -->
+            <nav
+            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+            >
+            <div class="container-fluid">
+                <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                <li class="nav-item topbar-user dropdown hidden-caret">
+                    <div class="d-flex justify-content-start align-items-center">
+                    <div class="profile-username ms-3">
+                        <span class="op-7">Hi,</span>
+                        <span class="fw-bold">{{username}}</span>
+                    </div>
+                    </div>
+                </li>
+                </ul>
+            </div>
+            </nav>
 
-    <div class="main-content">
-        <h1><b>PROFILE</b></h1>
-        <div class="profile-card">
-            <div class="profile-item">
-                <span class="label">First Name :</span>
-                <span class="value">Xi Yuan</span>
-            </div>
-            <br>
-            <div class="profile-item">
-                <span class="label">Last Name :</span>
-                <span class="value">Cheng</span>
-            </div>
-            <br>
-            <div class="profile-item">
-                <span class="label">Username :</span>
-                <span class="value">xiyuancheng</span>
-            </div>
-            <br>
-            <div class="profile-item">
-                <span class="label">Phone Number :</span>
-                <span class="value">011-1111 1111</span>
-            </div>
-            <br>
-            <div class="profile-item">
-                <span class="label">Email Address :</span>
-                <span class="value">xiyuancheng@gmail.com</span>
-            </div>
-            <br>
-            <div class="profile-item">
-                <span class="label">Country/ Region :</span>
-                <span class="value">Malaysia</span>
+            <!-- End Navbar -->
+        </div>
+
+
+        <div class="container">
+            <div class="page-inner">
+                <div
+                class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+              >
+                <div>
+                  <h3 class="fw-bold mb-3">Profile</h3>
+                  <h6 class="op-7 mb-2">Hi {{username}}, Let's build a better community together. </h6>
+                </div>
+                <div class="ms-md-auto py-2 py-md-0">
+                  <a href="/review" class="btn btn-label-info btn-round me-2">Review</a>
+                  
+                </div>
+              </div>
+                <div class="row">
+
+                    <div class="col-md-5">
+                        <div class="card card-profile" style="min-height: 450px">
+                          <div
+                            class="card-header"
+                            style="background-image: url('static/img/2.jpg')"
+                          >
+                            <div class="profile-picture">
+                              <div class="avatar avatar-xl">
+                                <img
+                                  src="static/img/3.jpg"
+                                  alt="..."
+                                  class="avatar-img rounded-circle"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <div class="user-profile text-center">
+                              <div class="name">{{username}}</div>
+                              <div class="job">Tier: Silver Level</div>
+                              <div class="desc">Charityyyyyyyyy !!!</div>
+                              <div class="social-media">
+                                <a
+                                  class="btn btn-info btn-twitter btn-sm btn-link"
+                                  href="#"
+                                >
+                                  <span class="btn-label just-icon"
+                                    ><i class="icon-social-twitter"></i>
+                                  </span>
+                                </a>
+                                <a
+                                  class="btn btn-primary btn-sm btn-link"
+                                  rel="publisher"
+                                  href="#"
+                                >
+                                  <span class="btn-label just-icon"
+                                    ><i class="icon-social-facebook"></i>
+                                  </span>
+                                </a>
+                                <a
+                                  class="btn btn-danger btn-sm btn-link"
+                                  rel="publisher"
+                                  href="#"
+                                >
+                                  <span class="btn-label just-icon"
+                                    ><i class="icon-social-instagram"></i>
+                                  </span>
+                                </a>
+                              </div>
+                              <div class="view-profile">
+                                <a href="#" class="btn btn-secondary w-100"
+                                  >Edit your profile</a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-footer">
+                            <div class="row user-stats text-center">
+                              <div class="col">
+                                <div class="number">{{email}}</div>
+                                <div class="title">Email</div>
+                              </div>
+                              <div class="col">
+                                <div class="number">{{walletAddr}}</div>
+                                <div class="title">Wallet Address</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    <div class="col-md-4">
+                        
+                            <div class="card card-info card-annoucement card-round" style="min-height: 450px">
+                                <div class="card-body text-center">
+                                <div class="card-opening">Welcome to {{username}} Profile,</div>
+                                <div class="card-desc">
+                                    Message:
+                                </div>
+                                <div class="card-desc">
+                                    Volunteering at Lovely Disabled Home was inspiring. Assisting with daily activities and supporting residents' needs was deeply fulfilling. A truly impactful experience that highlighted the importance of compassion and care.
+                                </div>
+                                <br><br><br><br>
+                                <div class="card-detail">
+                                    <div class="btn btn-light btn-rounded">Volunteer Program</div>
+                                </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card-pricing2 card-primary" style="min-height: 450px">
+                          <div class="pricing-header">
+                            <h3 class="fw-bold mb-3">Platinum</h3>
+                            <span class="sub-title">CarePoint Badge</span>
+                          </div>
+                          <div class="price-value">
+                            <div class="value">
+                              <span class="currency"></span>
+                              <span class="amount">1000+<span></span></span>
+                              <span class="month">CP</span>
+                            </div>
+                          </div>
+                          <ul class="pricing-content">
+                            <li>Receive more than 300 CP tokens.</li>
+                            <li>Attend 10 or more volunteering programs.</li>
+                            <li>Donate more than RM100.</li>
+                            
+                          </ul>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
+    
     </div>
 {% endblock %}

@@ -352,7 +352,7 @@
 
             if (response.ok) {
                 if (data.result.status === 'pending') {
-                    Swal.fire('Success', 'Successfully joined and tokens added!', 'success');
+                    Swal.fire('Success', 'You have successfully registered! We will send you an email confirmation soon.', 'success');
                 } else {
                     Swal.fire('Error', data.message || 'Failed to join', 'error');
                 }

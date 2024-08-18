@@ -1805,6 +1805,12 @@ label {
   display: block !important; }
 
 /*     Card States    */
+
+.custom-card {
+  width: 500px; /* Adjust the width as needed */
+  height: 250px; /* Adjust the height as needed */
+}
+
 .card-dark, .card-black, .card-primary, .card-secondary, .card-info, .card-success, .card-warning, .card-danger {
   color: #ffffff !important;
   border: 0px !important; }

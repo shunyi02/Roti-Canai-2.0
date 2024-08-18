@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify,session,render_template_string,render_template
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+from datetime import datetime
 import requests
+import os
 
 # Blueprint setup
 wallet_bp = Blueprint('wallet', __name__)
@@ -119,12 +121,14 @@ def check_balance():
     
     response = requests.post(api_url, headers=headers, json=data)
     balance_data = response.json()
-    print(balance_data)
+    #print(balance_data)
     if balance_data.get('status') == 200:
+        print("check balance (fund): ", float(user.get('balance')),", check balance (token): ", float(balance_data.get('result')))
         return jsonify({
             "balance_in_db": float(user.get('balance')),
             "balance_from_api": float(balance_data.get('result'))
         }), 200
+        
     else:
         return jsonify({"message": "Failed to retrieve balance"}), 400
 
@@ -188,6 +192,90 @@ def remove_funds():
     
     return jsonify({"message": "Funds removed successfully", "new_balance": new_balance, "status": "Success"}), 200
 
+def get_fund_transactions(file_path, username):
+    transactions = []
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            for line in file:
+                parts = line.strip().split(',')
+                if len(parts) == 6 and parts[2] == 'Fund':
+                    # Split the parts based on the assumption of the format
+                    transaction_user = parts[4].strip()  # user part
+                    
+                    if username == transaction_user:
+                        transaction = {
+                            'datetime': parts[0],
+                            'org_name': parts[1],
+                            'type': parts[2],
+                            'page': parts[3],
+                            'user': transaction_user,
+                            'amount': float(parts[5])  # Assuming amount should be a float
+                        }
+                        transactions.append(transaction)
+    #print("history:", transactions)
+    return transactions
+
+def get_token_transactions(file_path, username):
+    cp_transactions = []
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            for line in file:
+                parts = line.strip().split(',')
+                print(parts[1])
+                if len(parts) == 6 and parts[2] == 'Token':
+                    # Split the parts based on the assumption of the format
+                    transaction_user = parts[4].strip()  # user part
+                    
+                    if username == transaction_user:
+                        cp_transaction = {
+                            'datetime': parts[0],
+                            'product': parts[1],
+                            'type': parts[2],
+                            'page': parts[3],
+                            'user': transaction_user,
+                            'amount': float(parts[5])  # Assuming amount should be a float
+                        }
+                        cp_transactions.append(cp_transaction)
+    print("history:", cp_transactions)
+    return cp_transactions
+
+@wallet_bp.route('/view-fund-transactions')
+def view_fund_transactions():
+    transactions = get_fund_transactions('transactions.txt')
+    return render_template('wallet.html', transactions=transactions)
+
+
+@wallet_bp.route('/api/transaction', methods=['POST'])
+def save_transaction():
+    try:
+        data = request.json
+        org_name = data.get('orgName')
+        amount = data.get('amount')
+        type = data.get('type')
+        page = data.get('page')
+        user = data.get('user')
+
+        # Format the transaction data
+        transaction_info = {
+            'datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'org_name': org_name,
+            'type': type,
+            'page': page,
+            'user':user,
+            'amount': amount
+        }
+        
+        print("transaction api:", transaction_info)
+
+        # Write to a text file
+        with open('transactions.txt', 'a') as file:
+            file.write(f"{transaction_info['datetime']},{transaction_info['org_name']},{transaction_info['type']},{transaction_info['page']},{transaction_info['user']},{transaction_info['amount']}\n")
+            print(f"successfully print record: {transaction_info['datetime']}, {transaction_info['org_name']}, {transaction_info['type']}, {transaction_info['page']}, {transaction_info['user']},{transaction_info['amount']}")
+
+        return jsonify({'message': 'Transaction saved successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
 #done
 @wallet_bp.route('/api/transfer-token-after-purchase', methods=['POST'])
 def mint_token_after_fund_purchase():
@@ -199,6 +287,7 @@ def mint_token_after_fund_purchase():
 
     amount_to_transfer = float(request.json.get('amount'))
     token_amount = amount_to_transfer/10
+    print("user input:", amount_to_transfer, token_amount)
     # Validate input
     if not user_id or not amount_to_transfer:
         return jsonify({"message": "User ID and amount to transfer are required"}), 400
@@ -210,6 +299,7 @@ def mint_token_after_fund_purchase():
         return jsonify({"message": "User not found"}), 404
     
     current_balance = float(user.get('balance', 0))
+    print("user current balance:", current_balance)
     
     # Check if there are sufficient funds
     if amount_to_transfer > current_balance:
@@ -217,6 +307,7 @@ def mint_token_after_fund_purchase():
     
     # Update the balance
     new_balance = current_balance - amount_to_transfer
+    print("user new balance:", new_balance)
     collection.update_one(
         {"userId": user_id},
         {"$set": {"balance": new_balance}}
@@ -237,7 +328,7 @@ def mint_token_after_fund_purchase():
     data = {
         "wallet_address": wallet_address,
         "to": wallet_addr,
-        "amount": float(token_amount),
+        "amount": str(token_amount),
         "contract_address": contract_address,
         "callback_url": callback_url
     }
@@ -291,7 +382,7 @@ def remove_tokens():
         return jsonify({"message": "Failed to check token balance"}), 500
     
     current_balance = float(balance_result.get('result', 0))
-    print(current_balance)
+    print("Current Balance:", current_balance)
     
     if float(amount_to_burn) > current_balance:
         return jsonify({"message": "Insufficient tokens"}), 400
@@ -299,14 +390,17 @@ def remove_tokens():
     # Burn the tokens
     burn_api_url = "https://service-testnet.maschain.com/api/token/burn"
     burn_data = {
-        "wallet_address": "0x6E84d9eD84A98460F090E8A337507F1cC4000564", #org wallet
+        "wallet_address": "0x6E84d9eD84A98460F090E8A337507F1cC4000564", # org wallet
         "to": wallet_address,
         "amount": amount_to_burn,
         "contract_address": contract_address,
         "callback_url": "https://postman-echo.com/post?"
     }
     burn_response = requests.post(burn_api_url, headers=headers, json=burn_data)
-    return jsonify(burn_response.json()), burn_response.status_code
+    burn_result = burn_response.json()
+    print("Burn Response:", burn_result, burn_response.status_code)
+    return jsonify(burn_result)
+
 
 from flask import request, jsonify
 import requests

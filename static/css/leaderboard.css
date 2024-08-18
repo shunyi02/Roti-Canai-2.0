@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap');
+
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	box-sizing: border-box;
+	font-family: 'Montserrat', sans-serif;
+}
+
+body{
+	background: #ffffff;
+}
+
+.wrapper{
+	width: 100%;
+	height: 100%;
+}
+
+.lboard_section {
+    width: 600px; /* Increase width as needed */
+    height: 400px; /* Increase height as needed */
+    margin: 100px auto 0;
+    background: #1a1a2e;
+    padding: 25px 40px;
+    position: relative;
+    border-radius: 15px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* Add shadow */
+}
+
+.lboard_section .lboard_tabs ul{
+	display: flex;
+}
+
+.lboard_section .lboard_tabs ul li{
+	margin-right: 50px;
+	font-size: 18px;
+	font-weight: 600;
+	color: #535872;
+	cursor: pointer;
+}
+
+.lboard_section .lboard_tabs ul li.active {
+  color: #ffffff;
+  background-color: #58759a; /* Set the background color for emphasis */
+  border-radius: 5px; /* Optional: Add rounded corners */
+  padding: 15px 15px; /* Optional: Adjust padding for better appearance */
+  transition: background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.lboard_wrap {
+    position: absolute;
+    top: 50px; /* Adjust top position if necessary */
+    left: 50px; /* Adjust left position if necessary */
+    background: #8585aa;
+    width: 40%; /* Adjust width as needed */
+    height: 58%; /* Adjust height as needed */
+    border-radius: 15px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* Add shadow */
+}
+
+.lboard_wrap .lboard_item{
+	padding: 25px;
+}
+
+.lboard_wrap .lboard_mem{
+	display: flex;
+	align-items: center;
+	padding: 15px 0;
+	border-bottom: 2px solid #1a1a2e;
+}
+
+.lboard_wrap .lboard_mem:first-child{
+	padding-top: 0;
+}
+
+.lboard_wrap .lboard_mem:last-child{
+	padding-bottom: 0;
+	border-bottom: 0;
+}
+
+.lboard_wrap .lboard_mem .img{
+	width: 50px;
+}
+
+.lboard_wrap .lboard_mem img{
+	display: block;
+	width: 100%;
+}
+
+.lboard_wrap .lboard_mem .name_bar{
+	margin: 0 20px;
+	width: calc(100% - 150px);
+}
+
+.lboard_wrap .lboard_mem .name_bar p{
+	color: #1a1a2e;
+}
+
+.lboard_wrap .lboard_mem .name_bar p span{
+	margin-right: 5px;
+}
+
+.lboard_wrap .lboard_mem .points{
+	width: 120px;
+	color: #1a1a2e;
+}
+
+.lboard_wrap .lboard_mem .name_bar .bar_wrap{
+	width: 95%;
+	height: 8px;
+	background: #595972;
+	margin-top: 5px;
+	border-radius: 5px;
+	position: relative;
+	overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Add shadow */
+}
+
+.lboard_wrap .lboard_mem .name_bar .bar_wrap .inner_bar{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 8px;
+	background: #ffffff;
+	border-radius: 5px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+*{box-sizing: border-box; }
+body{
+  margin: 0; padding: 0px; font-family: 'Poppins', sans-serif;}
+
+
+
+
+.bg-lnir{background-image: linear-gradient(to right, #8490ff , #a3eeff);}
+
+::selection{
+    color: aliceblue;
+    background: #7c9cfe;
+}
+
+
+
+/****************** start tools section *********************/

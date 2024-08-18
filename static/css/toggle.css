@@ -1,0 +1,67 @@
+.toggle-left {
+    float: left;
+    margin-left: 0;
+  }
+
+.toggle-switch {
+    position: relative;
+    width: 200px;
+    height: 40px;
+    background-color:  #9ed1f8;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+  }
+  
+  .toggle-switch input[type="radio"] {
+    display: none;
+  }
+  
+  .toggle-label {
+    width: 50%;
+    height: 100%;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 2;
+  }
+  
+  .toggle-slider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 90px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  #fundWallet:checked ~ .toggle-slider {
+    left: 5px;
+  }
+  
+  #cpWallet:checked ~ .toggle-slider {
+    left: calc(100% - 95px);
+  }
+  
+  #fundWallet:checked + .toggle-label,
+  #cpWallet:not(:checked) + .toggle-label {
+    color: #1572E8;
+  }
+  
+  #cpWallet:checked + .toggle-label,
+  #fundWallet:not(:checked) + .toggle-label {
+    color: #1572E8;
+  }
+  
+  .toggle-switch input[type="radio"]:checked + .toggle-label {
+    color: white;
+  }
+  

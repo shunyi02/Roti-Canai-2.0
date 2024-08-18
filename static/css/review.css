@@ -1,0 +1,59 @@
+
+.carousel{
+    height: 600px; 
+    perspective: 250px;    
+    
+}
+.carousel .carousel-item {
+	width: 450px;
+	background: #1a1a2e;
+	padding: 50px;
+	height: auto;
+	text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 6px 9px rgba(0, 0, 0, 1.0); /* Add shadow */
+}
+
+.img-area {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 50%;
+    border: inset 8px deepskyblue;
+    position: relative;
+}
+
+        .img-area img{
+            width: 100%;
+        }
+        .testi p {
+	color: #bbbbbb;
+	font-size: 14px;
+	line-height: 1.9;
+}
+        .testi h4 {
+	font-size: 30px;
+    letter-spacing: 4px;
+    margin: 7px 0;
+	/* margin: 0; */
+	color: #ffffff;
+}
+        .testi h5 {
+	font-size: 14px;
+	letter-spacing: 2px;
+	margin-top: 7px;
+    margin-bottom: 25px;
+}
+
+.rating {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.rating .star {
+    color: #ffd700; /* Gold color for stars */
+    font-size: 44px; /* Adjust size as needed */
+    margin: 0 2px; /* Spacing between stars */
+}
